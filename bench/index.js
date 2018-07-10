@@ -32,6 +32,10 @@ var jspbCls = require("./data/static_jspb.js").Test;
 var jspbBuf = new Uint8Array(Array.prototype.slice.call(pbjsBuf));
 var jspbMsg = jspbCls.deserializeBinary(jspbBuf);
 
+var BSON = require("bson");
+var bson = new BSON();
+var bsonBuf = bson.serialize(jsonMsg);
+
 newSuite("encoding")
 
 .add("protobuf.js (reflect)", function() {
@@ -48,6 +52,9 @@ newSuite("encoding")
 })
 .add("google-protobuf", function() {
     jspbMsg.serializeBinary();
+})
+.add("bson", function() {
+    bson.serialize(jsonMsg)
 })
 .run();
 
@@ -68,6 +75,9 @@ newSuite("decoding")
 .add("google-protobuf", function() {
     jspbCls.deserializeBinary(jspbBuf);
 })
+.add("bson", function() {
+    bson.deserialize(bsonBuf);
+})
 .run();
 
 newSuite("combined")
@@ -86,5 +96,8 @@ newSuite("combined")
 })
 .add("google-protobuf", function() {
     jspbCls.deserializeBinary(jspbMsg.serializeBinary());
+})
+.add("bson", function() {
+    bson.deserialize(bson.serialize(jsonMsg));
 })
 .run();
